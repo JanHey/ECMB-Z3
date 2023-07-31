@@ -29,50 +29,31 @@ from ipywidgets import HTML
 from IPython.display import display
 import base64
 import ipywidgets as widgets
+from IPython.display import display, Latex
 
 
-##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-#####                                                                   #####
-##### Funktionen für die überarbeitete Version "ModellBildung im Flug"  #####
-#####                                                                   #####
-##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+#####                                                       #####
+#####        Funktionen für die überarbeitete Version       #####
+##### EduChallenge: ModellBildung Z3 (Hosted on PreCampus)  #####
+#####                                                       #####
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
 
-##### Uploadbutton ohne Klasse: #####
+#####  #####  #####  #####  #####  #####  
+#####     Teil 2: Videoanalyse     #####
+#####  #####  #####  #####  #####  #####  
+
+##### Zelle Uploadbutton #####
 
 from video_upload_class import VideoUploads
 
 def Uploadbutton():
     vu=VideoUploads()
     vu.Button_um_Video_hochzuladen()
-
-##### Downloadbutton #####
-
-def DownloadButton(filename):
-    res = 'computed results'
-    #FILE
-    b64 = base64.b64encode(res.encode())
-    payload = b64.decode()
-
-    #BUTTONS
-    html_buttons = '''<html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-    <a href="{filename}" download>
-    <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">Download Datei</button>
-    </a>
-    </body>
-    </html>
-    '''
-
-    html_button = html_buttons.format(payload=payload,filename=filename)
-    display(HTML(html_button))
     
-   
     
-
 ##### Zelle Vorbereitung #####
 
 def vorbereitungen(B):
@@ -139,6 +120,7 @@ def video_in_bilder_zerlegen():
 
 
 
+
 ##### Zelle Videoanalyse #####
 
 # siehe: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.connect.html   
@@ -189,8 +171,9 @@ def Messwerte_zeigen_und_speichern(x, y, B, H, b, h, fps, N_Bilder):
     ax.set_title("Beobachtete Flugbahn des Objekts \n Messwerte aus Antippen im Video")
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
-    plt.show()
-    plt.savefig("Messwerte_aus_Antippen.png")  
+    plt.show()    
+    fig.savefig("Messwerte_aus_Antippen.png")  
+
     
     # Bestimme N_Punkte. Weil es sein kann, dass ein Bild nicht oder doppelt angeklickt wurde, ist das nicht notwendig = N_Bilder (wenn es eigentlich auch so sein sollte).
     N_Punkte = len(x)
@@ -257,17 +240,62 @@ def func(t, b, c):
     return -0.5*g*t*t + b*t + c
 
 
-def print_Schaetzer_Anfangswerte(x_0, y_0, v_x, v_y0, rundung):
-    print("geschätzte Anfangswerte der Wurfbewegung:")
-    print("x_0=" + str(np.round(x_0, rundung)) + "m")
-    print("y_0=" + str(np.round(y_0, rundung)) + "m")
+def print_Schaetzer_Anfangswerte(x_0, y_0, v_x0, v_y0, rundung):
+    str_a_x_0 = str(0.00)
+    str_v_x_0 = str(np.round(v_x0, rundung))
+    str_x_0 = str(np.round(x_0, rundung))
 
-    print("v_x0=" + str(np.round(v_x, rundung)) + "m/s")
-    print("v_y0=" + str(np.round(v_y0, rundung)) + "m/s")
+    str_a_y_0 = str(-9.81)
+    str_v_y_0 = str(np.round(v_y0, rundung))
+    str_y_0 = str(np.round(y_0, rundung))
+
+    display("geschätzte Anfangswerte der Wurfbewegung")
+
+    display("in x-Richtung:")
+    display(Latex(f'$a_{{x,0}}= $' + str_a_x_0 + f'$\\frac{{m}}{{s^2}}$'))
+    display(Latex(f'$v_{{x,0}}= $' + str_v_x_0 + f'$\\frac{{m}}{{s}}$'))
+    display(Latex(f'$x_{{0}}= $' + str_x_0 + f'$m$'))
+
+    display("in y-Richtung:")
+    display(Latex(f'$a_{{y,0}}= $' + str_a_y_0 + f'$\\frac{{m}}{{s^2}}$'))
+    display(Latex(f'$v_{{y,0}}= $' + str_v_y_0 + f'$\\frac{{m}}{{s}}$'))
+    display(Latex(f'$y_{{0}}= $' + str_y_0 + f'$m$'))
     return 1
 
 
-##### Zelle Werte wiederherstellung ##### 
+
+##### Downloadbutton #####
+
+def DownloadButton(filename):
+    res = 'computed results'
+    #FILE
+    b64 = base64.b64encode(res.encode())
+    payload = b64.decode()
+
+    #BUTTONS
+    html_buttons = '''<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+    <a href="{filename}" download>
+    <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">Download Datei</button>
+    </a>
+    </body>
+    </html>
+    '''
+
+    html_button = html_buttons.format(payload=payload,filename=filename)
+    display(HTML(html_button))
+    
+
+
+#####  #####  #####  #####  #####  #####  
+#####     Teil 3: Simulation       #####
+#####  #####  #####  #####  #####  #####  
+
+##### Zelle Werte wiederherstellen #####
+
 def werte_wiederherstellen():
     
     Videoanalyse_Positionen = pd.read_excel("Videoanalyse_Positionen.xlsx", index_col=0)
@@ -296,52 +324,8 @@ def werte_wiederherstellen():
     return x, y, zeitpunkte, B, H, b, h, fps, delta_t, N_Punkte, N_Bilder, x_0, y_0, v_x0, v_y0
 
 
-#### Codezelle Simulation #####
 
-def simulation_ausführen(x_0, y_0, v_x0, v_y0, fps, N_Punkte, Nr):
-    
-    # Randwerte
-    dt = 1. / fps # Zeit zwischen zwei Bildern in s 
-    g  = 9.81 # Erdbeschleunigung in m/s^2
-    a_x0 = 0.
-    a_y0 = -g
-    N_Punkte = int(N_Punkte) # Anzahl an Runden
-
-    # Arrays anlegen
-    a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array = tabellen_fuer_simulationsswerte_anlegen(N_Punkte, x_0, y_0, v_x0, v_y0, a_x0, a_y0)
-
-    # Simulation durchführen:
-    for r in range(1, N_Punkte, 1): # "-1", weil die Anfangswerte schon gegeben sind...
-        # Einlesen der "alten" Werte (aus der vorherigen Runde) aus der Tabelle:
-        a_x_alt, v_x_alt, x_alt, a_y_alt, v_y_alt, y_alt = a_x_array[r-1], v_x_array[r-1], x_array[r-1], a_y_array[r-1], v_y_array[r-1], y_array[r-1]
-
-        # Der Spielzug, in dem wie Werte der neuen Runde nach den Spielregeln berechnet werden:
-        ##### ***Trage in den nächsten Zeilen die Spielregeln für die Simulation einer Wurfbewegung ein.*** #####
-        a_x_neu = 0.
-        v_x_neu = v_x_alt
-        x_neu = x_alt + v_x_alt*dt
-
-        a_y_neu = -g
-        v_y_neu = v_y_alt + a_y_alt * dt
-        y_neu = y_alt + v_y_alt * dt
-
-        # Und nun schreiben wir die neuen Werte in die Tabelle an der Stelle der Runde "r":
-        a_x_array[r] = a_x_neu
-        v_x_array[r] = v_x_neu
-        x_array[r]   = x_neu
-
-        a_y_array[r] = a_y_neu
-        v_y_array[r] = v_y_neu
-        y_array[r]   = y_neu
-        
-    print("Die Simulation wurde erfolgreich durchgeführt.")
-        
-    # Ergebnis als Grafik zeigen und speichern:
-    df_sim = zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array, Nr)
-    
-    return df_sim
-
-
+##### Zelle Anfangs- und Randwerte #####
 def tabellen_fuer_simulationsswerte_anlegen(N_punkte, x_0, y_0, v_x0, v_y0, a_x0, a_y0):
     """
     Diese Funktion speichert die Startwerte in der für die Simulation benötigten Syntax ab und legt die entsprechenden Arrays an. 
@@ -368,6 +352,9 @@ def tabellen_fuer_simulationsswerte_anlegen(N_punkte, x_0, y_0, v_x0, v_y0, a_x0
     return a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array
 
 
+
+##### Zelle Simulation durchführen #####
+
 def zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array, Nr):
     N = len(a_x_array)
     matrix_alle_werte = np.zeros([N,6])
@@ -384,8 +371,12 @@ def zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_arra
     
     #df_sim = pd.DataFrame(data=matrix_alle_werte, index=matrix_alle_werte[:,0], columns=spalten)
     df_sim = pd.DataFrame(data=matrix_alle_werte, columns=spalten)
-    #print("Hier ist der ausgefüllte Spielplan:")
-    #print(df_sim)
+    
+    # speichern der Daten:
+    df_sim.to_excel("Simulation" + str(Nr) + ".xlsx")  
+    
+    print("Hier ist der ausgefüllte Spielplan:")
+    print(df_sim)
     
     # plotten:
     fig, ax = plt.subplots()
@@ -394,25 +385,38 @@ def zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_arra
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
     plt.show()
-    plt.savefig("Simulierte_Flugbahn_" + str(Nr) + ".png")
-    
-    DownloadButton("Simulierte_Flugbahn_" + str(Nr) + ".png")
-    
-    
-    # speichern der Daten:
-    df_sim.to_excel("Simulation" + str(Nr) + ".xlsx")    
+    fig.savefig("Simulierte_Flugbahn_" + str(Nr) + ".png")
     
     return df_sim
 
+##### Zelle Download #####
 
-##### Codezelle "erzeuge Grafiken" 
-def erzeuge_Grafiken(Nr):
+def Download_Simulationsdateien(Nr):
+    
+    print("Download der Grafik mit den simulierten Werten:")
+    DownloadButton("Simulierte_Flugbahn_" + str(Nr) + ".png")
+    
+    print("Download der Exceltabelle mit den simulierten Werten:")
+    DownloadButton("Simulation" + str(Nr) + ".xlsx")
+    
+    return 1
+    
 
-    # Werte einlesen
+#####  #####  #####  #####  #####  #####  
+#####     Teil 4: Vergleich        #####
+#####  #####  #####  #####  #####  #####  
+
+##### Zelle Grafiken erzeugen #####
+
+def erzeuge_3Grafiken(Nr):
+
+    ##### Werte einlesen #####
     df_sim = pd.read_excel("Simulation" + str(Nr) + ".xlsx", index_col=0)
     Videoanalyse_Positionen = pd.read_excel("Videoanalyse_Positionen.xlsx", index_col=0)
     Videoanalyse_Parameter = pd.read_excel("Videoanalyse_Parameter.xlsx", index_col=0)
 
+    
+    ##### Simple Vergleichsgrafik: #####
     x_emp = Videoanalyse_Positionen["x-Positionen in m"]
     y_emp = Videoanalyse_Positionen["y-Positionen in m"]
     x_sim = df_sim["x"]
@@ -428,12 +432,234 @@ def erzeuge_Grafiken(Nr):
     ax.set_xlabel('x [m]')
     ax.set_title('Vergleich Prognose aus Simulation und Messwerte aus Beobachtung.')
     ax.legend()
-    plt.savefig("Vergleich_Messwerte_Simulation_" + str(Nr) + ".png")
+    fig.savefig("Vergleich_Messwerte_Simulation_" + str(Nr) + ".png")
     plt.show()
     
+    print("Download Vergleich Simulation und Messwerte:")
     DownloadButton("Vergleich_Messwerte_Simulation_" + str(Nr) + ".png")
     
-    print("Grafik erzeugt.") 
+    
+    ##### Vergleichsgrafik mit Kenngrößen: #####
+    print("Grafik mit Kenngrößen für Auswertung:")
+    Auswertungsgrafik_erstellen(x_emp, y_emp, x_sim, y_sim, Nr)
+    
+    print("Download Auswertungsgrafik:")
+    DownloadButton("Vergleich_Auswertungsgrafik" + str(Nr) + ".pdf")
+    
+    
+    ##### 3x3 Grafiken auf A4 ####
+    dateiname_druck = "Ergebnisgrafiken_3x3_" + str(Nr)
+    erstelle_druckversion_gruppe(x_emp, y_emp, x_sim, y_sim, dateiname_druck)
+    print("Ergebnisgrafiken als pdf zum Ausdrucken und Einkleben einkleben im Laborbuch erzeugt. \n")
+    
+    print("Download 3x3 A4 Druckversion:")
+    DownloadButton(dateiname_druck + ".pdf")
+    
+    print("Grafiken erzeugt.") 
+    
+    
+    
+    
+def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
+    """
+    Erzeugt eine pdf-Datei in der jeweils 3x die Grafik Messwerte, Prognose und Überlagerung in der für das Laborbuch passenden Größe abgedruckt sind. 
+    """
+    plt.close()
+    fig, ax = plt.subplots(3, 3, sharey="none", figsize=(11.6, 8.2)) # DIN A4 in inch
+    plt.tight_layout(pad=5, w_pad=4, h_pad=7.5) #pad: Gesamtgröße, w_pad: Breite der Grafiken, h_pad: Höhe der einzelnen Grafiken 
+    
+    # Achsenbeschriftung Messwerte 
+    x_achse_m = x_m[np.argmax(x_m)] + 0.1*x_m[np.argmax(x_m)]
+    y_achse_m = y_m[np.argmax(y_m)] + 0.1*y_m[np.argmax(y_m)]
+    
+    for i in range(0, 3):
+        ax[i][0].plot(x_m, y_m, marker=".", color ='b', linestyle="None") #D
+        ax[i][0].set_xlabel("x-Position [m]")
+        ax[i][0].set_ylabel("y-Position [m]")
+        ax[i][0].set_title("Grafik Messwerte")
+        ax[i][0].axis( [0, x_achse_m, 0, y_achse_m] )
+   
+    # Achsenbeschriftung Simulation    
+    x_achse_s = x_array[np.argmax(x_array)] + 0.1*x_array[np.argmax(x_array)]
+    y_achse_s = y_array[np.argmax(y_array)] + 0.1*y_array[np.argmax(y_array)]
+    
+    for i in range(0, 3):
+        ax[i][1].plot(x_array, y_array, marker="x", color ='r', linestyle="None") 
+        ax[i][1].set_xlabel("x-Position [m]")
+        ax[i][1].set_ylabel("y-Position [m]")
+        ax[i][1].set_title("Grafik Prognose")
+        ax[i][1].axis( [0, x_achse_s, 0, y_achse_s] )
+        
+    # Achsenbeschriftung Überlagerung
+    x_achse_u = max(x_achse_m, x_achse_s)
+    y_achse_u = max(y_achse_m, y_achse_s)
+
+    for i in range(0, 3):
+        ax[i][2].plot(x_m, y_m, marker=".", color ='b', linestyle="None", label="gemessen") #D
+        ax[i][2].plot(x_array, y_array, marker="x", color ='r', linestyle="None", label="simuliert") 
+        ax[i][2].set_xlabel("x-Position [m]")
+        ax[i][2].set_ylabel("y-Position [m]")
+        ax[i][2].set_title("Grafik Überlagerung")
+        ax[i][2].legend()
+        ax[i][2].axis( [0, x_achse_u, 0, y_achse_u] )
+    
+    plt.show() 
+    
+    fig.savefig(dateiname_druck + ".pdf")
+    fig.savefig(dateiname_druck + ".png")
+       
+    plt.close()
+    
+    
+    
+    
+def Auswertungsgrafik_erstellen(x_emp, y_emp, x_sim, y_sim, Nr):
+    ### nun die Version mit den Werten für die quantitative Auswertung erstellen: 
+    fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
+
+    # die beiden Zeitreihen:
+    ax.plot(x_emp, y_emp, marker=".", color ='b', linestyle="None", label="gemessen")
+    ax.plot(x_sim, y_sim, marker="x", color ='r', linestyle="None", label="simuliert") 
+
+    # für Abstand d zwischen Messwerten und simulierter Prognose:
+    diff = np.absolute(y_emp - y_sim)
+    d = np.max(diff) # maximaler Abstand Prognose - Messwerte in m
+    stelle_d = np.argmax(diff)
+
+    punkte_d_x_richtung = [x_sim[stelle_d], x_sim[stelle_d]]
+    punkte_d_y_richtung = [y_sim[stelle_d], y_emp[stelle_d]]
+    ax.plot(punkte_d_x_richtung, punkte_d_y_richtung, color='black', label = "d = " + str(np.round(d,2)) + " m")
+
+    punkte_d_hilf_x_richtung = [x_sim[stelle_d], x_emp[stelle_d]]
+    punkte_d_hilf_y_richtung = [y_emp[stelle_d], y_emp[stelle_d]]
+    ax.plot(punkte_d_hilf_x_richtung, punkte_d_hilf_y_richtung, color='black', linestyle="dotted")
+
+    # für Wurfhöhe h:
+    max_y = np.max(y_emp)
+    min_y = np.min(y_emp)
+    h = max_y - min_y
+    
+    N_Punkte = x_emp.size
+
+    punkte_h_hilf_oben_x = [x_emp[0], x_emp[N_Punkte-1]]
+    punkte_h_hilf_oben_y = [max_y, max_y]
+    ax.plot(punkte_h_hilf_oben_x, punkte_h_hilf_oben_y, color='b', linestyle="dotted")
+    punkte_h_hilf_unten_x = [x_emp[0], x_emp[N_Punkte-1]]
+    punkte_h_hilf_unten_y = [min_y, min_y]
+    ax.plot(punkte_h_hilf_unten_x, punkte_h_hilf_unten_y, color='b', linestyle="dotted")
+
+    stelle_zeichne_h = 0.3 * np.mean(x_emp)
+    punkte_h_x = [stelle_zeichne_h, stelle_zeichne_h]
+    punkte_h_y = [min_y, max_y]
+
+    # hier kommt die "echte" Linie für 
+    ax.plot(punkte_h_x, punkte_h_y, color='b', label = "h = " + str(np.round(h,2)) + " m")
+
+    # G berechnen und str vorbereiten:
+    G = d / h
+    str_G = str(np.round(G,2))
+
+    # Formalia für Plot:
+    ax.set_ylabel('y [m]')
+    ax.set_xlabel('x [m]')
+    ax.set_title('Vergleich Prognose aus Simulation und Messwerte aus Beobachtung.')# \n G = ' + str_G)
+    ax.legend()
+    fig.savefig("Vergleich_Auswertungsgrafik" + str(Nr) + ".pdf")
+    plt.show()
+    
+    
+    
+    
+    
+### alt - später löschen: Codezelle "erzeuge_Grafiken" aus "educhallenge_v8.py" aus dem letzten Zyklus
+
+def erzeuge_Grafiken(Nr, Gruppenname):
+
+    ### zunächst die Werte einlesen: 
+    df_s1 = pd.read_pickle(Gruppenname + "/s1.pkl")
+    B = df_s1["Bildbreite"][0]
+    H = df_s1["H"][0]
+    b = df_s1["b"][0]
+    h = df_s1["h"][0]
+
+    df_s2 = pd.read_pickle(Gruppenname + "/s2.pkl")
+    x_m_emp = df_s2["x_m"]
+    y_m_emp = df_s2["y_m"]
+
+    df_s3 = pd.read_pickle(Gruppenname + "/s3.pkl")
+    N_Punkte = df_s3["N_Punkte"][0]
+
+    df_s4 = pd.read_pickle(Gruppenname + "/s4_sim_" + str(Nr) + ".pkl")
+    x_m_sim = df_s4["x"]
+    y_m_sim = df_s4["y"]
+
+
+    ### nun die Druckversion mit den 3x3 Grafiken erzeugen:
+    dateiname_druck = "Ergebnisgrafiken_" + Gruppenname + "_" + str(Nr)
+    erstelle_druckversion_gruppe(x_m_emp, y_m_emp, x_m_sim, y_m_sim, dateiname_druck, Gruppenname)
+    print("Ergebnisgrafiken als pdf zum Ausdrucken und Einkleben einkleben im Laborbuch erzeugt. \n Das pdf ist im gleichen Ordner wie dieses Jupyter Notebook. \n ")
+
+
+    print("Hier ist eine Grafik, in der die Größen d, h, G für die Aufgabe 2 zur Auswertung im Laborbuch eingezeichnet und berechnet sind:")
+    ### nun die Version mit den Werten für die quantitative Auswertung erstellen: 
+    fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
+
+    # die beiden Zeitreihen:
+    ax.plot(x_m_emp, y_m_emp, marker=".", color ='b', linestyle="None", label="gemessen")
+    ax.plot(x_m_sim, y_m_sim, marker="x", color ='r', linestyle="None", label="simuliert") 
+
+    # für Abstand d zwischen Messwerten und simulierter Prognose:
+    diff = np.absolute(y_m_emp - y_m_sim)
+    d = np.max(diff) # maximaler Abstand Prognose - Messwerte in m
+    stelle_d = np.argmax(diff)
+
+    punkte_d_x_richtung = [x_m_sim[stelle_d], x_m_sim[stelle_d]]
+    punkte_d_y_richtung = [y_m_sim[stelle_d], y_m_emp[stelle_d]]
+    ax.plot(punkte_d_x_richtung, punkte_d_y_richtung, color='black', label = "d = " + str(np.round(d,2)) + " m")
+
+    punkte_d_hilf_x_richtung = [x_m_sim[stelle_d], x_m_emp[stelle_d]]
+    punkte_d_hilf_y_richtung = [y_m_emp[stelle_d], y_m_emp[stelle_d]]
+    ax.plot(punkte_d_hilf_x_richtung, punkte_d_hilf_y_richtung, color='black', linestyle="dotted")
+
+    # für Wurfhöhe h:
+    max_y = np.max(y_m_emp)
+    min_y = np.min(y_m_emp)
+    h = max_y - min_y
+
+    punkte_h_hilf_oben_x = [x_m_emp[0], x_m_emp[N_Punkte-1]]
+    punkte_h_hilf_oben_y = [max_y, max_y]
+    ax.plot(punkte_h_hilf_oben_x, punkte_h_hilf_oben_y, color='b', linestyle="dotted")
+    punkte_h_hilf_unten_x = [x_m_emp[0], x_m_emp[N_Punkte-1]]
+    punkte_h_hilf_unten_y = [min_y, min_y]
+    ax.plot(punkte_h_hilf_unten_x, punkte_h_hilf_unten_y, color='b', linestyle="dotted")
+
+    stelle_zeichne_h = 0.3 * np.mean(x_m_emp)
+    punkte_h_x = [stelle_zeichne_h, stelle_zeichne_h]
+    punkte_h_y = [min_y, max_y]
+
+    # hier kommt die "echte" Linie für 
+    ax.plot(punkte_h_x, punkte_h_y, color='b', label = "h = " + str(np.round(h,2)) + " m")
+
+    # G berechnen und str vorbereiten:
+    G = d / h
+    str_G = str(np.round(G,2))
+
+    # Formalia für Plot:
+    ax.set_ylabel('y [m]')
+    ax.set_xlabel('x [m]')
+    ax.set_title('Vergleich Prognose aus Simulation und Messwerte aus Beobachtung.')# \n G = ' + str_G)
+    ax.legend()
+    plt.savefig(Gruppenname + "/" + dateiname_druck + "_fuerAuswertung.pdf")
+    plt.show()
+
+    print("Grafik erzeugt.")
+    
+    #return G
+
+
+
+
+
     
     
     
@@ -558,6 +784,85 @@ def kombiniere_Bilder_zu_Video(N_Punkte, dateiname_video):
 
 
 
+
+#####  #####  #####  #####  #####  #####  
+#####     Zusatz: Luftreibung        #####
+#####  #####  #####  #####  #####  #####  
+
+##### Zelle XY #####
+
+
+
+
+
+
+
+
+
+
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+#####                                                                   #####
+##### Funktionen für die überarbeitete Version "ModellBildung im Flug"  #####
+#####                                                                   #####
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
+
+
+
+
+   
+ 
+#### Codezelle Simulation #####
+
+def simulation_ausführen(x_0, y_0, v_x0, v_y0, fps, N_Punkte, Nr):
+    
+    # Randwerte
+    dt = 1. / fps # Zeit zwischen zwei Bildern in s 
+    g  = 9.81 # Erdbeschleunigung in m/s^2
+    a_x0 = 0.
+    a_y0 = -g
+    N_Punkte = int(N_Punkte) # Anzahl an Runden
+
+    # Arrays anlegen
+    a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array = tabellen_fuer_simulationsswerte_anlegen(N_Punkte, x_0, y_0, v_x0, v_y0, a_x0, a_y0)
+
+    # Simulation durchführen:
+    for r in range(1, N_Punkte, 1): # "-1", weil die Anfangswerte schon gegeben sind...
+        # Einlesen der "alten" Werte (aus der vorherigen Runde) aus der Tabelle:
+        a_x_alt, v_x_alt, x_alt, a_y_alt, v_y_alt, y_alt = a_x_array[r-1], v_x_array[r-1], x_array[r-1], a_y_array[r-1], v_y_array[r-1], y_array[r-1]
+
+        # Der Spielzug, in dem wie Werte der neuen Runde nach den Spielregeln berechnet werden:
+        ##### ***Trage in den nächsten Zeilen die Spielregeln für die Simulation einer Wurfbewegung ein.*** #####
+        a_x_neu = 0.
+        v_x_neu = v_x_alt
+        x_neu = x_alt + v_x_alt*dt
+
+        a_y_neu = -g
+        v_y_neu = v_y_alt + a_y_alt * dt
+        y_neu = y_alt + v_y_alt * dt
+
+        # Und nun schreiben wir die neuen Werte in die Tabelle an der Stelle der Runde "r":
+        a_x_array[r] = a_x_neu
+        v_x_array[r] = v_x_neu
+        x_array[r]   = x_neu
+
+        a_y_array[r] = a_y_neu
+        v_y_array[r] = v_y_neu
+        y_array[r]   = y_neu
+        
+    print("Die Simulation wurde erfolgreich durchgeführt.")
+        
+    # Ergebnis als Grafik zeigen und speichern:
+    df_sim = zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_array, v_y_array, y_array, Nr)
+    
+    return df_sim
+
+
+
+
+
+
+
+##### Codezelle "erzeuge Grafiken" 
 
 
 
