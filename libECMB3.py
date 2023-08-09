@@ -41,8 +41,8 @@ from IPython.display import display, Latex
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
 # Farbdefinition: 
-uni_blau = (7,82,154) # Farbe der Simulation
-uni_gelb = (234,185,12) # Farbe der Beobachtung
+uni_blau = (7/255, 82/255, 154/255) # Farbe der Simulation
+uni_gelb = (234/255,185/255,12/255) # Farbe der Beobachtung
 global_markersize = 12
 
 
