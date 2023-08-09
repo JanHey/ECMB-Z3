@@ -501,7 +501,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
 
     for i in range(0, 3):
         ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = 8, label="gemessen", linestyle = "None") #D
-        ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert", linestyle = "None") 
+        ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = 8, label="simuliert", linestyle = "None") 
         ax[i][2].set_xlabel("x-Position [m]")
         ax[i][2].set_ylabel("y-Position [m]")
         ax[i][2].set_title("Grafik Überlagerung")
