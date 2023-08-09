@@ -43,7 +43,7 @@ from IPython.display import display, Latex
 # Farbdefinition: 
 uni_blau = (7/255, 82/255, 154/255) # Farbe der Simulation
 uni_gelb = (234/255,185/255,12/255) # Farbe der Beobachtung
-global_markersize = 12
+global_markersize = 14
 
 
 #####  #####  #####  #####  #####  #####  
@@ -172,7 +172,7 @@ def Messwerte_zeigen_und_speichern(x, y, B, H, b, h, fps, N_Bilder):
     
     # einen Plot ausgeben und speichern, damit man die Bahnkurve schon mal sieht:
     fig, ax = plt.subplots()
-    plt.plot(x, y, marker = "o", color = uni_blau, markersize= global_markersize)
+    plt.plot(x, y, marker = "o", color = uni_blau, markersize= global_markersize, linestyle = "None")
     ax.set_title("Beobachtete Flugbahn des Objekts \n Messwerte aus Antippen im Video")
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
@@ -385,7 +385,7 @@ def zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_arra
     
     # plotten:
     fig, ax = plt.subplots()
-    plt.plot(x_array, y_array, marker = "o", color = uni_gelb, markersize= global_markersize)
+    plt.plot(x_array, y_array, marker = "o", color = uni_gelb, markersize= global_markersize, linestyle = "None")
     ax.set_title("Simulierte Flugbahn des Objekts \n Simulation mit Modell und Anfangswerten")
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
@@ -430,8 +430,8 @@ def erzeuge_3Grafiken(Nr):
     # Plot erstellen
     fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
 
-    ax.plot(x_emp, y_emp, label="gemessen", marker = "o", color = uni_blau, markersize= global_markersize)
-    ax.plot(x_sim, y_sim, label="simuliert", marker = "o", color = uni_gelb, markersize= global_markersize)
+    ax.plot(x_emp, y_emp, label="gemessen", marker = "o", color = uni_blau, markersize= global_markersize, linestyle = "None")
+    ax.plot(x_sim, y_sim, label="simuliert", marker = "o", color = uni_gelb, markersize= global_markersize, linestyle = "None")
 
     ax.set_ylabel('y [m]')
     ax.set_xlabel('x [m]')
@@ -478,7 +478,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_m = y_m[np.argmax(y_m)] + 0.1*y_m[np.argmax(y_m)]
     
     for i in range(0, 3):
-        ax[i][0].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize) 
+        ax[i][0].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, linestyle = "None") 
         ax[i][0].set_xlabel("x-Position [m]")
         ax[i][0].set_ylabel("y-Position [m]")
         ax[i][0].set_title("Messwerte aus Videoanalyse")
@@ -489,7 +489,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_s = y_array[np.argmax(y_array)] + 0.1*y_array[np.argmax(y_array)]
     
     for i in range(0, 3):
-        ax[i][1].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize) 
+        ax[i][1].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, linestyle = "None") 
         ax[i][1].set_xlabel("x-Position [m]")
         ax[i][1].set_ylabel("y-Position [m]")
         ax[i][1].set_title("Simulation aus Modell")
@@ -500,8 +500,8 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_u = max(y_achse_m, y_achse_s)
 
     for i in range(0, 3):
-        ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen") #D
-        ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert") 
+        ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen", linestyle = "None") #D
+        ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert", linestyle = "None") 
         ax[i][2].set_xlabel("x-Position [m]")
         ax[i][2].set_ylabel("y-Position [m]")
         ax[i][2].set_title("Grafik Überlagerung")
@@ -523,8 +523,8 @@ def Auswertungsgrafik_erstellen(x_emp, y_emp, x_sim, y_sim, Nr):
     fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
 
     # die beiden Zeitreihen:
-    ax.plot(x_emp, y_emp, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen")
-    ax.plot(x_sim, y_sim, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert") 
+    ax.plot(x_emp, y_emp, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen", linestyle = "None")
+    ax.plot(x_sim, y_sim, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert", linestyle = "None") 
 
     # für Abstand d zwischen Messwerten und simulierter Prognose:
     diff = np.absolute(y_emp - y_sim)
