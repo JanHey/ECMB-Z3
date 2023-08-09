@@ -40,6 +40,11 @@ from IPython.display import display, Latex
 #####                                                       #####
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 
+# Farbdefinition: 
+uni_blau = (7,82,154) # Farbe der Simulation
+uni_gelb = (234,185,12) # Farbe der Beobachtung
+global_markersize = 12
+
 
 #####  #####  #####  #####  #####  #####  
 #####     Teil 2: Videoanalyse     #####
@@ -167,7 +172,7 @@ def Messwerte_zeigen_und_speichern(x, y, B, H, b, h, fps, N_Bilder):
     
     # einen Plot ausgeben und speichern, damit man die Bahnkurve schon mal sieht:
     fig, ax = plt.subplots()
-    plt.plot(x, y, "bo")
+    plt.plot(x, y, marker = "o", color = uni_blau, markersize= global_markersize)
     ax.set_title("Beobachtete Flugbahn des Objekts \n Messwerte aus Antippen im Video")
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
@@ -380,7 +385,7 @@ def zeige_und_speichere_simulierte_werte(a_x_array, v_x_array, x_array, a_y_arra
     
     # plotten:
     fig, ax = plt.subplots()
-    plt.plot(x_array, y_array, "ro")
+    plt.plot(x_array, y_array, marker = "o", color = uni_gelb, markersize= global_markersize)
     ax.set_title("Simulierte Flugbahn des Objekts \n Simulation mit Modell und Anfangswerten")
     ax.set_xlabel("x-Position [m]")
     ax.set_ylabel("y-Position [m]")
@@ -425,8 +430,8 @@ def erzeuge_3Grafiken(Nr):
     # Plot erstellen
     fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
 
-    ax.plot(x_emp, y_emp, "bo", label="gemessen")
-    ax.plot(x_sim, y_sim, "ro", label="simuliert")
+    ax.plot(x_emp, y_emp, label="gemessen", marker = "o", color = uni_blau, markersize= global_markersize)
+    ax.plot(x_sim, y_sim, label="simuliert", marker = "o", color = uni_gelb, markersize= global_markersize)
 
     ax.set_ylabel('y [m]')
     ax.set_xlabel('x [m]')
@@ -473,10 +478,10 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_m = y_m[np.argmax(y_m)] + 0.1*y_m[np.argmax(y_m)]
     
     for i in range(0, 3):
-        ax[i][0].plot(x_m, y_m, marker=".", color ='b', linestyle="None") #D
+        ax[i][0].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize) 
         ax[i][0].set_xlabel("x-Position [m]")
         ax[i][0].set_ylabel("y-Position [m]")
-        ax[i][0].set_title("Grafik Messwerte")
+        ax[i][0].set_title("Messwerte aus Videoanalyse")
         ax[i][0].axis( [0, x_achse_m, 0, y_achse_m] )
    
     # Achsenbeschriftung Simulation    
@@ -484,10 +489,10 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_s = y_array[np.argmax(y_array)] + 0.1*y_array[np.argmax(y_array)]
     
     for i in range(0, 3):
-        ax[i][1].plot(x_array, y_array, marker="x", color ='r', linestyle="None") 
+        ax[i][1].plot(x_array, y_array, , marker = "o", color = uni_gelb, markersize = global_markersize) 
         ax[i][1].set_xlabel("x-Position [m]")
         ax[i][1].set_ylabel("y-Position [m]")
-        ax[i][1].set_title("Grafik Prognose")
+        ax[i][1].set_title("Simulation aus Modell")
         ax[i][1].axis( [0, x_achse_s, 0, y_achse_s] )
         
     # Achsenbeschriftung Überlagerung
@@ -495,8 +500,8 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_u = max(y_achse_m, y_achse_s)
 
     for i in range(0, 3):
-        ax[i][2].plot(x_m, y_m, marker=".", color ='b', linestyle="None", label="gemessen") #D
-        ax[i][2].plot(x_array, y_array, marker="x", color ='r', linestyle="None", label="simuliert") 
+        ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen") #D
+        ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert") 
         ax[i][2].set_xlabel("x-Position [m]")
         ax[i][2].set_ylabel("y-Position [m]")
         ax[i][2].set_title("Grafik Überlagerung")
@@ -518,8 +523,8 @@ def Auswertungsgrafik_erstellen(x_emp, y_emp, x_sim, y_sim, Nr):
     fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
 
     # die beiden Zeitreihen:
-    ax.plot(x_emp, y_emp, marker=".", color ='b', linestyle="None", label="gemessen")
-    ax.plot(x_sim, y_sim, marker="x", color ='r', linestyle="None", label="simuliert") 
+    ax.plot(x_emp, y_emp, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen")
+    ax.plot(x_sim, y_sim, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert") 
 
     # für Abstand d zwischen Messwerten und simulierter Prognose:
     diff = np.absolute(y_emp - y_sim)
@@ -570,94 +575,6 @@ def Auswertungsgrafik_erstellen(x_emp, y_emp, x_sim, y_sim, Nr):
     
     
     
-    
-### alt - später löschen: Codezelle "erzeuge_Grafiken" aus "educhallenge_v8.py" aus dem letzten Zyklus
-
-def erzeuge_Grafiken(Nr, Gruppenname):
-
-    ### zunächst die Werte einlesen: 
-    df_s1 = pd.read_pickle(Gruppenname + "/s1.pkl")
-    B = df_s1["Bildbreite"][0]
-    H = df_s1["H"][0]
-    b = df_s1["b"][0]
-    h = df_s1["h"][0]
-
-    df_s2 = pd.read_pickle(Gruppenname + "/s2.pkl")
-    x_m_emp = df_s2["x_m"]
-    y_m_emp = df_s2["y_m"]
-
-    df_s3 = pd.read_pickle(Gruppenname + "/s3.pkl")
-    N_Punkte = df_s3["N_Punkte"][0]
-
-    df_s4 = pd.read_pickle(Gruppenname + "/s4_sim_" + str(Nr) + ".pkl")
-    x_m_sim = df_s4["x"]
-    y_m_sim = df_s4["y"]
-
-
-    ### nun die Druckversion mit den 3x3 Grafiken erzeugen:
-    dateiname_druck = "Ergebnisgrafiken_" + Gruppenname + "_" + str(Nr)
-    erstelle_druckversion_gruppe(x_m_emp, y_m_emp, x_m_sim, y_m_sim, dateiname_druck, Gruppenname)
-    print("Ergebnisgrafiken als pdf zum Ausdrucken und Einkleben einkleben im Laborbuch erzeugt. \n Das pdf ist im gleichen Ordner wie dieses Jupyter Notebook. \n ")
-
-
-    print("Hier ist eine Grafik, in der die Größen d, h, G für die Aufgabe 2 zur Auswertung im Laborbuch eingezeichnet und berechnet sind:")
-    ### nun die Version mit den Werten für die quantitative Auswertung erstellen: 
-    fig, ax = plt.subplots() # figsize=(11.6, 8.2) für A4
-
-    # die beiden Zeitreihen:
-    ax.plot(x_m_emp, y_m_emp, marker=".", color ='b', linestyle="None", label="gemessen")
-    ax.plot(x_m_sim, y_m_sim, marker="x", color ='r', linestyle="None", label="simuliert") 
-
-    # für Abstand d zwischen Messwerten und simulierter Prognose:
-    diff = np.absolute(y_m_emp - y_m_sim)
-    d = np.max(diff) # maximaler Abstand Prognose - Messwerte in m
-    stelle_d = np.argmax(diff)
-
-    punkte_d_x_richtung = [x_m_sim[stelle_d], x_m_sim[stelle_d]]
-    punkte_d_y_richtung = [y_m_sim[stelle_d], y_m_emp[stelle_d]]
-    ax.plot(punkte_d_x_richtung, punkte_d_y_richtung, color='black', label = "d = " + str(np.round(d,2)) + " m")
-
-    punkte_d_hilf_x_richtung = [x_m_sim[stelle_d], x_m_emp[stelle_d]]
-    punkte_d_hilf_y_richtung = [y_m_emp[stelle_d], y_m_emp[stelle_d]]
-    ax.plot(punkte_d_hilf_x_richtung, punkte_d_hilf_y_richtung, color='black', linestyle="dotted")
-
-    # für Wurfhöhe h:
-    max_y = np.max(y_m_emp)
-    min_y = np.min(y_m_emp)
-    h = max_y - min_y
-
-    punkte_h_hilf_oben_x = [x_m_emp[0], x_m_emp[N_Punkte-1]]
-    punkte_h_hilf_oben_y = [max_y, max_y]
-    ax.plot(punkte_h_hilf_oben_x, punkte_h_hilf_oben_y, color='b', linestyle="dotted")
-    punkte_h_hilf_unten_x = [x_m_emp[0], x_m_emp[N_Punkte-1]]
-    punkte_h_hilf_unten_y = [min_y, min_y]
-    ax.plot(punkte_h_hilf_unten_x, punkte_h_hilf_unten_y, color='b', linestyle="dotted")
-
-    stelle_zeichne_h = 0.3 * np.mean(x_m_emp)
-    punkte_h_x = [stelle_zeichne_h, stelle_zeichne_h]
-    punkte_h_y = [min_y, max_y]
-
-    # hier kommt die "echte" Linie für 
-    ax.plot(punkte_h_x, punkte_h_y, color='b', label = "h = " + str(np.round(h,2)) + " m")
-
-    # G berechnen und str vorbereiten:
-    G = d / h
-    str_G = str(np.round(G,2))
-
-    # Formalia für Plot:
-    ax.set_ylabel('y [m]')
-    ax.set_xlabel('x [m]')
-    ax.set_title('Vergleich Prognose aus Simulation und Messwerte aus Beobachtung.')# \n G = ' + str_G)
-    ax.legend()
-    plt.savefig(Gruppenname + "/" + dateiname_druck + "_fuerAuswertung.pdf")
-    plt.show()
-
-    print("Grafik erzeugt.")
-    
-    #return G
-
-
-
 
 
     
