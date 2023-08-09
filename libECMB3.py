@@ -489,7 +489,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_s = y_array[np.argmax(y_array)] + 0.1*y_array[np.argmax(y_array)]
     
     for i in range(0, 3):
-        ax[i][1].plot(x_array, y_array, , marker = "o", color = uni_gelb, markersize = global_markersize) 
+        ax[i][1].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize) 
         ax[i][1].set_xlabel("x-Position [m]")
         ax[i][1].set_ylabel("y-Position [m]")
         ax[i][1].set_title("Simulation aus Modell")
