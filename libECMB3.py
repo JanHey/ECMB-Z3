@@ -43,7 +43,7 @@ from IPython.display import display, Latex
 # Farbdefinition: 
 uni_blau = (7/255, 82/255, 154/255) # Farbe der Simulation
 uni_gelb = (234/255,185/255,12/255) # Farbe der Beobachtung
-global_markersize = 14
+global_markersize = 12
 
 
 #####  #####  #####  #####  #####  #####  
@@ -478,7 +478,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_m = y_m[np.argmax(y_m)] + 0.1*y_m[np.argmax(y_m)]
     
     for i in range(0, 3):
-        ax[i][0].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, linestyle = "None") 
+        ax[i][0].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = 8, linestyle = "None") 
         ax[i][0].set_xlabel("x-Position [m]")
         ax[i][0].set_ylabel("y-Position [m]")
         ax[i][0].set_title("Messwerte aus Videoanalyse")
@@ -489,7 +489,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_s = y_array[np.argmax(y_array)] + 0.1*y_array[np.argmax(y_array)]
     
     for i in range(0, 3):
-        ax[i][1].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, linestyle = "None") 
+        ax[i][1].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = 8, linestyle = "None") 
         ax[i][1].set_xlabel("x-Position [m]")
         ax[i][1].set_ylabel("y-Position [m]")
         ax[i][1].set_title("Simulation aus Modell")
@@ -500,7 +500,7 @@ def erstelle_druckversion_gruppe(x_m, y_m, x_array, y_array, dateiname_druck):
     y_achse_u = max(y_achse_m, y_achse_s)
 
     for i in range(0, 3):
-        ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = global_markersize, label="gemessen", linestyle = "None") #D
+        ax[i][2].plot(x_m, y_m, marker = "o", color = uni_blau, markersize = 8, label="gemessen", linestyle = "None") #D
         ax[i][2].plot(x_array, y_array, marker = "o", color = uni_gelb, markersize = global_markersize, label="simuliert", linestyle = "None") 
         ax[i][2].set_xlabel("x-Position [m]")
         ax[i][2].set_ylabel("y-Position [m]")
@@ -664,10 +664,10 @@ def erstelle_ueberlagerungsplots(i, x_emp, y_emp, x_sim, y_sim, B, H):
     plt.imshow(img, extent=[0, B, 0, H], animated=True) 
     
     # Einblenden der simulierten Punkte:
-    plt.plot(x_sim[:i+1], y_sim[:i+1], "ro", label = "simuliert")
+    plt.plot(x_sim[:i+1], y_sim[:i+1], label = "simuliert", marker = "o", color = uni_gelb, markersize= 10, linestyle = "None")
 
     # Einblenden der empirischen Werte:
-    plt.plot(x_emp[:i+1], y_emp[:i+1], "bo", label = "gemessen")
+    plt.plot(x_emp[:i+1], y_emp[:i+1], label = "gemessen", marker = "o", color = uni_blau, markersize= 10, linestyle = "None")
     
     plt.savefig("Ueberlagerungsbilder" + "/ueberlagerungsbild" + str(format(i, '02d')) + ".png")
     plt.close() 
