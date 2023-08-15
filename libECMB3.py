@@ -612,6 +612,13 @@ def erzeuge_Ueberlagerungsvideo(Nr):
         os.mkdir("Ueberlagerungsbilder")
     except:
         unnuetz = 42
+        
+    # teste, ob es die Bilder aus dem zu analysierenden Video vom Anfang noch gibt...
+    try:
+        img = mpimg.imread("Ausgangsbilder" + "/frame" + str(format(i, '02d')) + ".jpg") 
+    except: # ansonsten mache den Schritt vom Anfang nochmal...
+        aa, bb, cc, dd, ee = vorbereitungen(B) # die hier ausgegebenen Werte sind N_Bilder, fps, h, b, H, werden aber nicht gebraucht. 
+        
     
     print("Vorbereitungen für Videoerstellung abgeschlossen... (Bilder werden nun erzeugt. Das dauert einen Moment...)")
 
