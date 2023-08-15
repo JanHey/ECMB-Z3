@@ -58,6 +58,10 @@ def Uploadbutton():
     vu=VideoUploads()
     vu.Button_um_Video_hochzuladen()
     
+def Dateiuploadbutton():
+    vu=VideoUploads()
+    vu.Button_um_Dateien_hochzuladen()
+    
     
 ##### Zelle Vorbereitung #####
 
