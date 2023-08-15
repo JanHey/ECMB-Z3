@@ -459,7 +459,7 @@ def erzeuge_3Grafiken(Nr):
     ##### 3x3 Grafiken auf A4 ####
     dateiname_druck = "Ergebnisgrafiken_3x3_" + str(Nr)
     erstelle_druckversion_gruppe(x_emp, y_emp, x_sim, y_sim, dateiname_druck)
-    print("Ergebnisgrafiken als pdf zum Ausdrucken und Einkleben einkleben im Laborbuch erzeugt. \n")
+    print("pdf der Ergebnisgrafiken erzeugt. Wenn ihr mit einem analogen Laborbuch arbeitet, könnt ihr diese A4-Seite ausdrucken und die Grafiken im Laborbuch einkleben (s. Hinweise in PreCampus). \n")
     
     print("Download 3x3 A4 Druckversion:")
     DownloadButton(dateiname_druck + ".pdf")
