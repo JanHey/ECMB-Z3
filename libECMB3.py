@@ -191,10 +191,17 @@ def Messwerte_zeigen_und_speichern(x, y, B, H, b, h, fps, N_Bilder):
     delta_t = 1/fps # Zeit zwischen zwei Bildern
     zeitpunkte = np.arange(0, N_Punkte*delta_t, delta_t)
     
+    # Anzahl Punkt und dt ausgeben
+    
+    print("Anzahl Punkt in Videoanalyse: N = " + str(N_Punkte))
+    print("Zeit zwischen zwei Bildern im Video: dt = " + str(np.round(1./fps, 5)))
+    
     # Schätzer für die Startwerte berechnen und ausgeben:
     x_0, y_0, v_x0, v_y0 = berechne_startwerte_fit(fps, x, y)
     rundung = 2
     print_Schaetzer_Anfangswerte(x_0, y_0, v_x0, v_y0, rundung)
+    
+    print("Notiere alle diese Werte in deinem Laborbuch. Du brauchst sie später für die Simulation.")
     
     # Alle Werte speichern. Als Exceltabelle speichern, damit Jugendliche auch außerhalb des Projekt damit weiterarbeiten könnten    
     dict_Videoanalyse_positionen = {"Zeitpunkte der Bilder/Positionen in s seit erstem Bild": zeitpunkte, "x-Positionen in m": x, "y-Positionen in m": y}
