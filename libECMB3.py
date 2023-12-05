@@ -63,6 +63,19 @@ def Dateiuploadbutton():
     vu.Button_um_Dateien_hochzuladen()
     
     
+##### Zelle Eingabe Bildbreite ####
+def Bildbreite_eingegeben(B):
+    
+    try:
+        if len(B) > 0:
+            print("WARNUNG: Es scheint, dass du die Bildbreite falsch eingegeben hast. \n Die Bildbreite muss mit einem PUNKT statt einem Komma eingegeben werden (amerikanische Schreibweise beim Programmieren). \n Bitte kontrolliere, ob du die Hinweise über dieser Zelle beachtet hast.")
+        else:
+            print("Na gut")
+            
+    except:
+        print("Eingabe Bildbreite: " + str(B) + " m")
+    
+    
 ##### Zelle Vorbereitung #####
 
 def vorbereitungen(B):
