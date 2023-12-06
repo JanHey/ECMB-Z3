@@ -296,27 +296,18 @@ def print_Schaetzer_Anfangswerte(x_0, y_0, v_x0, v_y0, rundung):
 ##### Downloadbutton #####
 
 def DownloadButton(filename):
-    res = 'computed results'
-    #FILE
-    b64 = base64.b64encode(res.encode())
+    title=f"Download"
+    data = open(filename, "rb").read()
+    b64 = base64.b64encode(data)
     payload = b64.decode()
+    if(filename.endswith(".png")):
+        html = '<a download="{filename}" href="data:image/png;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    else:
+        html = '<a download="{filename}" href="data:text/csv;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    html = html.format(payload=payload,title=title+f' {filename}',filename=filename)
+    return display(HTML(html))
 
-    #BUTTONS
-    html_buttons = '''<html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-    <a href="{filename}" download>
-    <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">Download Datei</button>
-    </a>
-    </body>
-    </html>
-    '''
 
-    html_button = html_buttons.format(payload=payload,filename=filename)
-    display(HTML(html_button))
-    
 
 
 #####  #####  #####  #####  #####  #####  
