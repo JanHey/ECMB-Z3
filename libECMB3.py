@@ -242,7 +242,11 @@ def berechne_startwerte_fit(fps, x_m, y_m):
     t_emp = np.linspace(0, dt*n_punkte, num=n_punkte) 
     
     # Fit in x-Richtung
-    fit_param_x = np.polyfit(t_emp, x_m, 1) # fit_param: m,n mit y = m*x + n
+    try:
+        fit_param_x = np.polyfit(t_emp, x_m, 1) # fit_param: m,n mit y = m*x + n
+    except:
+        print("***Achtung! Es ist ein Fehler beim Schätzen der Startwerte aufgetreten.*** \n Meist liegt dies daran, dass es einen Wert außerhalb des Videobereichs gibt. Dies kann z.B. passieren, wenn du während der Videoanalyse auf eine andere Stelle auf dem Display getippt / geklickt hast (vielleicht auch versehentlich) oder ein Punkt am Rand des Videos versehentlich außerhalb des Videobereichs angeklickt wurde. \n Bitte führe die Videoanalyse erneut aus und achte darauf während der Videoanalyse nicht anderweitig auf das Display zu tippen / klicken und nur innerhalb des Videobereichs Punkte anzutippen. Liegt der letzte Punkt im Video sehr nah am Rand, kannst du ihn auch einfach auslassen.\n \n")    
+    
     m = fit_param_x[0]
     n = fit_param_x[1]
     #print(m,n)
