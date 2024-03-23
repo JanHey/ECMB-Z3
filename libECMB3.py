@@ -26,7 +26,6 @@ import pandas as pd
 import seaborn as sns
 from datetime import datetime
 from ipywidgets import HTML
-from IPython.display import display
 import base64
 import ipywidgets as widgets
 from IPython.display import display, Latex
@@ -300,17 +299,25 @@ def print_Schaetzer_Anfangswerte(x_0, y_0, v_x0, v_y0, rundung):
 ##### Downloadbutton #####
 
 def DownloadButton(filename):
-    title=f"Download"
+    title = "Download"
     data = open(filename, "rb").read()
     b64 = base64.b64encode(data)
     payload = b64.decode()
-    if(filename.endswith(".png")):
+    
+    if filename.endswith(".png"):
         html = '<a download="{filename}" href="data:image/png;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    elif filename.endswith(".xlsx"):
+        html = '<a download="{filename}" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    elif filename.endswith(".mp4"):
+        html = '<a download="{filename}" href="data:video/mp4;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    elif filename.endswith(".pdf"):
+        html = '<a download="{filename}" href="data:application/pdf;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
     else:
-        html = '<a download="{filename}" href="data:text/csv;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
-    html = html.format(payload=payload,title=title+f' {filename}',filename=filename)
+        # For other file types, you can add appropriate handling here
+        html = '<a download="{filename}" href="data:text/plain;base64,{payload}" target="_blank"> <button class="p-Widget jupyter-widgets jupyter-button widget-button mod-warning">{title}</button> </a>'
+    
+    html = html.format(payload=payload, title=title+f' {filename}', filename=filename)
     return display(HTML(html))
-
 
 
 
