@@ -6,7 +6,7 @@ class VideoUploads:
         import ipywidgets as widgets
         import asyncio
         import os
-        upload_button = widgets.FileUpload(description='Video Upload', accept='.mov', multiple=False)
+        upload_button = widgets.FileUpload(description='Video Upload', multiple=False)
         display(upload_button)
         def handle_upload_button_change(change):
             uploaded_files = upload_button.value
