@@ -102,8 +102,8 @@ def resize_video(input_path, output_path, max_width, max_height):
     original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    #fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec für die Ausgabe (z. B. MP4)
-    fourcc = cv2.VideoWriter_fourcc(*'mov')  # Codec für die Ausgabe (z. B. MP4)
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec für die Ausgabe (z. B. MP4)
+    #fourcc = cv2.VideoWriter_fourcc(*'mov')  # Codec für die Ausgabe (z. B. MP4)
 
     # Neue Auflösung berechnen
     if original_width > max_width or original_height > max_height:
