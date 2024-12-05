@@ -77,6 +77,66 @@ def Bildbreite_eingegeben(B):
     
 ##### Zelle Vorbereitung #####
 
+# zu große Videos kleiner machen (Funktion erstellt mit ChatGPT)
+def resize_video(input_path, output_path, max_width, max_height):
+    """
+    Reduziert die Auflösung eines Videos, falls sie größer als die angegebenen Grenzwerte ist.
+
+    :param input_path: Pfad zum Eingabevideo.
+    :param output_path: Pfad zum Ausgabedatei.
+    :param max_width: Maximale Breite in Pixeln.
+    :param max_height: Maximale Höhe in Pixeln.
+    """
+    # Überprüfen, ob das Eingabevideo existiert
+    if not os.path.exists(input_path):
+        print(f"Das Eingabevideo '{input_path}' existiert nicht.")
+        return
+
+    # Video laden
+    cap = cv2.VideoCapture(input_path)
+    if not cap.isOpened():
+        print(f"Konnte das Video '{input_path}' nicht öffnen.")
+        return
+
+    # Aktuelle Auflösung ermitteln
+    original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    #fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec für die Ausgabe (z. B. MP4)
+    fourcc = cv2.VideoWriter_fourcc(*'mov')  # Codec für die Ausgabe (z. B. MP4)
+
+    # Neue Auflösung berechnen
+    if original_width > max_width or original_height > max_height:
+        scaling_factor = min(max_width / original_width, max_height / original_height)
+        new_width = int(original_width * scaling_factor)
+        new_height = int(original_height * scaling_factor)
+    else:
+        print("Die Auflösung des Videos ist passend.")
+        return
+
+    print(f"Originalauflösung: {original_width}x{original_height}, Neue Auflösung: {new_width}x{new_height}")
+
+    # VideoWriter initialisieren
+    out = cv2.VideoWriter(output_path, fourcc, fps, (new_width, new_height))
+
+    # Video frameweise verarbeiten
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Framegröße ändern
+        resized_frame = cv2.resize(frame, (new_width, new_height), interpolation=cv2.INTER_AREA)
+        out.write(resized_frame)
+
+    # Ressourcen freigeben
+    cap.release()
+    out.release()
+    print(f"Die Auflösung des Videos auf dem Server wurde zur weiteren Bearbeitung verkleinert.")
+
+# Beispielaufruf
+#resize_video("input.mp4", "output.mp4", 1280, 720)
+
 def vorbereitungen(B):
     
     # Ordner für die Bilder anlegen, wenn es ihn noch nicht gibt.
@@ -109,6 +169,9 @@ def video_in_bilder_zerlegen():
     # Den Dateinamen des Realvideos einlesen:
     file = open('DateinameVideo.txt','r')
     dateiname_realvideo = file.read()
+
+    # zunächst prüfen, ob das Video zu groß ist und wenn ja die Auflösung reduzieren:
+    resize_video(dateiname_realvideo, dateiname_realvideo, 1440, 1080) 
     
     vidcap = cv2.VideoCapture(dateiname_realvideo)
 
