@@ -77,66 +77,6 @@ def Bildbreite_eingegeben(B):
     
 ##### Zelle Vorbereitung #####
 
-# zu große Videos kleiner machen (Funktion erstellt mit ChatGPT)
-def resize_video(input_path, output_path, max_width, max_height):
-    """
-    Reduziert die Auflösung eines Videos, falls sie größer als die angegebenen Grenzwerte ist.
-
-    :param input_path: Pfad zum Eingabevideo.
-    :param output_path: Pfad zum Ausgabedatei.
-    :param max_width: Maximale Breite in Pixeln.
-    :param max_height: Maximale Höhe in Pixeln.
-    """
-    # Überprüfen, ob das Eingabevideo existiert
-    if not os.path.exists(input_path):
-        print(f"Das Eingabevideo '{input_path}' existiert nicht.")
-        return
-
-    # Video laden
-    cap = cv2.VideoCapture(input_path)
-    if not cap.isOpened():
-        print(f"Konnte das Video '{input_path}' nicht öffnen.")
-        return
-
-    # Aktuelle Auflösung ermitteln
-    original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec für die Ausgabe (z. B. MP4)
-    #fourcc = cv2.VideoWriter_fourcc(*'mov')  # Codec für die Ausgabe (z. B. MP4)
-
-    # Neue Auflösung berechnen
-    if original_width > max_width or original_height > max_height:
-        scaling_factor = min(max_width / original_width, max_height / original_height)
-        new_width = int(original_width * scaling_factor)
-        new_height = int(original_height * scaling_factor)
-    else:
-        print("Die Auflösung des Videos ist passend.")
-        return
-
-    print(f"Originalauflösung: {original_width}x{original_height}, Neue Auflösung: {new_width}x{new_height}")
-
-    # VideoWriter initialisieren
-    out = cv2.VideoWriter(output_path, fourcc, fps, (new_width, new_height))
-
-    # Video frameweise verarbeiten
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Framegröße ändern
-        resized_frame = cv2.resize(frame, (new_width, new_height), interpolation=cv2.INTER_AREA)
-        out.write(resized_frame)
-
-    # Ressourcen freigeben
-    cap.release()
-    out.release()
-    print(f"Die Auflösung des Videos auf dem Server wurde zur weiteren Bearbeitung verkleinert.")
-
-# Beispielaufruf
-#resize_video("input.mp4", "output.mp4", 1280, 720)
-
 def vorbereitungen(B):
     
     # Ordner für die Bilder anlegen, wenn es ihn noch nicht gibt.
@@ -171,7 +111,7 @@ def video_in_bilder_zerlegen():
     dateiname_realvideo = file.read()
 
     # zunächst prüfen, ob das Video zu groß ist und wenn ja die Auflösung reduzieren:
-    resize_video(dateiname_realvideo, dateiname_realvideo, 1440, 1080) 
+    #resize_video_new(dateiname_realvideo, dateiname_realvideo, 1440, 1080) 
     
     vidcap = cv2.VideoCapture(dateiname_realvideo)
 
@@ -185,6 +125,10 @@ def video_in_bilder_zerlegen():
       success,image = vidcap.read()
       count += 1
     N_Bilder = count # +1 (glaube ich falsch)
+
+    # Nun prüfen, ob die Bilder zu groß sind und sie ggf. verkleinern:
+    resize_images_by_pixel_limit("Ausgangsbilder", 1000000) # Pfad der Bilder, maximale Auflösung in Pixel
+    
     
     # get fps:
     # see https://learnopencv.com/how-to-find-frame-rate-or-frames-per-second-fps-in-opencv-python-cpp/
@@ -203,6 +147,68 @@ def video_in_bilder_zerlegen():
     return N_Bilder, fps
 
 
+def resize_images_by_pixel_limit(folder_path, G_Pixel):
+    """
+    Reduziert die Auflösung aller Bilder in einem Ordner, wenn das erste Bild den Pixel-Grenzwert überschreitet.
+
+    :param folder_path: Pfad zum Ordner mit den Bildern.
+    :param G_Pixel: Maximal erlaubte Anzahl an Pixeln (Höhe × Breite).
+    """
+    # Überprüfen, ob der Ordner existiert
+    if not os.path.exists(folder_path):
+        print(f"Der Ordner '{folder_path}' existiert nicht.")
+        return
+
+    # Pfad zum ersten Bild (frame00.jpg)
+    first_image_path = os.path.join(folder_path, "frame00.jpg")
+
+    if not os.path.exists(first_image_path):
+        print(f"Das erste Bild '{first_image_path}' existiert nicht.")
+        return
+
+    # Überprüfen der Auflösung des ersten Bildes
+    first_image = cv2.imread(first_image_path)
+    if first_image is None:
+        print(f"Das Bild '{first_image_path}' konnte nicht geöffnet werden.")
+        return
+
+    original_height, original_width = first_image.shape[:2]
+    total_pixels = original_height * original_width
+
+    if total_pixels <= G_Pixel:
+        print(f"Die Auflösung des ersten Bildes ({original_width}x{original_height}) überschreitet den Grenzwert nicht.")
+        return
+
+    else:
+        print(f"Die Auflösung des ersten Bildes ({original_width}x{original_height}) überschreitet den Grenzwert ({G_Pixel} Pixel). Bilder werden skaliert.")
+    
+        # Skalierungsfaktor berechnen
+        scaling_factor = (G_Pixel / total_pixels) ** 0.5
+        new_width = int(original_width * scaling_factor)
+        new_height = int(original_height * scaling_factor)
+    
+        # Alle Bilder im Ordner skalieren
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+    
+            try:
+                # Bild laden
+                img = cv2.imread(file_path)
+                if img is None:
+                    print(f"Die Datei '{filename}' ist kein gültiges Bild. Übersprungen.")
+                    continue
+    
+                # Bildgröße ändern
+                resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    
+                # Bild speichern (überschreiben)
+                cv2.imwrite(file_path, resized_img)
+                #print(f"Bild '{filename}' wurde auf {new_width}x{new_height} Pixel skaliert und gespeichert.")
+    
+            except Exception as e:
+                print(f"Fehler beim Verarbeiten von '{filename}': {e}")
+    
+        print(f"Die Auflösung der Bilder wurde erfolgreich verkleinert.")
 
 
 ##### Zelle Videoanalyse #####
